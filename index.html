@@ -1,25 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pogoda w Tokio</title>
+    <title>Pogoda w Waszyngtonie DC</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .weather-bar {
+            background-color: rgba(0, 0, 0, 0.5); /* półprzezroczyste tło */
+            color: white;
+            padding: 15px 30px;
+            border-radius: 20px; /* zaokrąglone rogi */
+            font-size: 24px;
             text-align: center;
-            margin-top: 50px;
         }
     </style>
 </head>
 <body>
-    <h1>Pogoda w Tokio</h1>
-    <p id="weather">Ładowanie...</p>
+    <div class="weather-bar" id="weather-bar">
+        Ładowanie...
+    </div>
 
     <script>
         async function getWeather() {
-            const apiKey = '4ce7c252387b4d08e7642b382ffc0f4e'; // Wstaw tutaj swój klucz API z OpenWeatherMap
-            const url = `https://api.openweathermap.org/data/2.5/weather?q=Tokyo&appid=${apiKey}&units=metric`;
+            const apiKey = '4ce7c252387b4d08e7642b382ffc0f4e';
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=Washington,DC&appid=${apiKey}&units=metric`;
 
             try {
                 const response = await fetch(url);
@@ -27,17 +41,29 @@
                 const temperature = data.main.temp;
                 const cityName = data.name;
 
-                document.getElementById('weather').textContent = `${cityName}, ${temperature}°C`;
+                return `${cityName}, ${temperature}°C`;
             } catch (error) {
-                document.getElementById('weather').textContent = 'Nie udało się pobrać danych.';
+                return 'Nie udało się pobrać danych.';
             }
         }
 
-        // Pobranie pogody przy pierwszym uruchomieniu
-        getWeather();
+        function updateTimeAndWeather() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            const currentTime = `${hours}:${minutes}:${seconds}`;
 
-        // Automatyczne odświeżanie co 60 sekund (60000 ms)
-        setInterval(getWeather, 60000); 
+            getWeather().then(weatherInfo => {
+                document.getElementById('weather-bar').textContent = `${currentTime} | ${weatherInfo}`;
+            });
+        }
+
+        // Pierwsze odświeżenie danych przy załadowaniu strony
+        updateTimeAndWeather();
+
+        // Automatyczne odświeżanie co minutę (60000 ms)
+        setInterval(updateTimeAndWeather, 60000); 
     </script>
 </body>
 </html>
