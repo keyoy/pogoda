@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pogoda w Tokio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pogoda w Tokio</h1>
+    <p id="weather">Ładowanie...</p>
+
+    <script>
+        async function getWeather() {
+            const apiKey = '4ce7c252387b4d08e7642b382ffc0f4e'; // Wstaw tutaj swój klucz API z OpenWeatherMap
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=Tokyo&appid=${apiKey}&units=metric`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const temperature = data.main.temp;
+                const cityName = data.name;
+
+                document.getElementById('weather').textContent = `${cityName}, ${temperature}°C`;
+            } catch (error) {
+                document.getElementById('weather').textContent = 'Nie udało się pobrać danych.';
+            }
+        }
+
+        // Pobranie pogody przy pierwszym uruchomieniu
+        getWeather();
+
+        // Automatyczne odświeżanie co 60 sekund (60000 ms)
+        setInterval(getWeather, 60000); 
+    </script>
+</body>
+</html>
