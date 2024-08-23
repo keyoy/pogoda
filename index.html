@@ -32,7 +32,7 @@
 
     <script>
         async function getWeather() {
-            const apiKey = '7a01445754bb1e47ce2a5f2f6f484168';
+            const apiKey = '4ce7c252387b4d08e7642b382ffc0f4e';
             const url = `https://api.openweathermap.org/data/2.5/weather?q=Washington,DC,US&appid=${apiKey}&units=metric`;
 
             try {
@@ -52,13 +52,9 @@
         }
 
         function updateTimeAndWeather() {
-            const now = new Date();
-            const hours = now.getHours().toString().padStart(2, '0');
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-              const currentTime = `${hours}:${minutes}:${seconds}`;
-
+            const now = new Date().toLocaleString("en-US", { timeZone: "America/New_York", hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
             getWeather().then(weatherInfo => {
-                document.getElementById('weather-bar').textContent = `${currentTime} | ${weatherInfo}`;
+                document.getElementById('weather-bar').textContent = `${now} | ${weatherInfo}`;
             });
         }
 
@@ -66,7 +62,7 @@
         updateTimeAndWeather();
 
         // Automatyczne odświeżanie co minutę (60000 ms)
-        setInterval(updateTimeAndWeather, 1000); 
+        setInterval(updateTimeAndWeather, 60000); 
     </script>
 </body>
 </html>
